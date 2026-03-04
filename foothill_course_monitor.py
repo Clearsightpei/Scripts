@@ -9,8 +9,19 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import requests
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://foothill.edu/"
+}
 
+def check_foothill():
+    url = "https://foothill.edu/schedule/index.html?dept=MATH&Quarter=2026S"
+    # Add the headers parameter here
+    response = requests.get(url, headers=HEADERS)
+    response.raise_for_status()
 # Configuration
 TARGET_URL = "https://foothill.edu/schedule/index.html?dept=MATH&Quarter=2026S"
 TARGET_CRNS = ["40390", "40039", "40626"]
