@@ -1,0 +1,39 @@
+name: Foothill Course Monitor
+
+on:
+  schedule:
+    # Run every 10 minutes during enrollment periods
+    - cron: '*/10 * * * *'
+
+  # Allow manual triggering from GitHub UI
+  workflow_dispatch:
+
+jobs:
+  check-availability:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4
+
+    - name: Run course monitor
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      run: |
+        python foothill_course_monitor.py
+
+    - name: Check script status
+      if: failure()
+      run: |
+        echo "⚠️ Course monitor script failed. Check logs above for details."
+        exit 1
